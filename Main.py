@@ -6,9 +6,6 @@ import matplotlib.pyplot as plt
 ### Reads dataset
 mollusks = gpd.read_file('https://raw.githubusercontent.com/CSmith05/Week-9-10-Project/main/MaineDMR_Molluscan_Shellfish_2010.geojson')
 
-### Scans for each unique species
-print(mollusks['SPECIES'].unique())
-
 ### Plots the distribution of species using their 'loc' value
 ### This also color-codes the different species, but it's hard to notice since the map is so small
 fig, ax = plt.subplots(figsize=(12, 12))
@@ -36,11 +33,12 @@ plt.show()
 ### Creates scatter plot of most common species' locations and centralize their points for clarity
 most_common_species = species_counts.idxmax()
 common_mollusks = mollusks[mollusks['SPECIES'] == most_common_species].copy()
+common_mollusks = common_mollusks.to_crs(epsg=26919)
 common_mollusks['geometry'] = common_mollusks.geometry.centroid
 
 ### Plot values
 plt.figure(figsize=(10, 8))
-plt.scatter(common_mollusks.geometry.x, common_mollusks.geometry.y, alpha=0.5, label=most_common_species, color='blue')
+plt.scatter(common_mollusks.geometry.x, common_mollusks.geometry.y, alpha=0.3, label=most_common_species, color='blue')
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.title(f"{most_common_species} Distribution")
